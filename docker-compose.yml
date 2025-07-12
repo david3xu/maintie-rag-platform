@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  gateway:
+    build: ./gateway
+    ports: ["8000:8000"]
+    depends_on:
+      [
+        query-enhancement,
+        knowledge-graph,
+        retrieval-fusion,
+        response-generation,
+      ]
+
+  query-enhancement:
+    build: ./services/query-enhancement-service
+    expose: [8000]
+
+  knowledge-graph:
+    build: ./services/knowledge-graph-service
+    expose: [8000]
+    volumes: ["./shared:/app/shared"]
+
+  retrieval-fusion:
+    build: ./services/retrieval-fusion-service
+    expose: [8000]
+
+  response-generation:
+    build: ./services/response-generation-service
+    expose: [8000]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
